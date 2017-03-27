@@ -1,0 +1,63 @@
+Default parameters are an excellent option when the function needs a value that the user may or may not want to override. For example, here are a few function prototypes for which default parameters might be commonly used:
+
+void openLogFile(std::string filename="default.log");
+int rollDie(int sides=6);
+void printStringInColor(std::string, Color color=COLOR_BLACK); // Color is an enum
+
+Multiple default parameters
+
+A function can have multiple default parameters:
+
+void printValues(int x=10, int y=20, int z=30)
+{
+    std::cout << "Values: " << x << " " << y << " " << z << '\n';
+}
+Given the following function calls:
+
+printValues(1, 2, 3);
+printValues(1, 2);
+printValues(1);
+printValues();
+The following output is produced:
+
+Values: 1 2 3
+Values: 1 2 30
+Values: 1 20 30
+Values: 10 20 30
+Note that it is impossible to supply a user-defined value for z without also supplying a value for x and y. This is because C++ does not support a function call syntax such as printValues(,,3). This has two major consequences:
+
+1) All default parameters must be the rightmost parameters. The following is not allowed:
+
+void printValue(int x=10, int y); // not allowed
+2) If more than one default parameter exists, the leftmost default parameter should be the one most likely to be explicitly set by the user.
+
+****Default parameters can only be declared once****
+
+Once declared, a default parameter can not be redeclared. That means for a function with a forward declaration and a function definition, the default parameter can be declared in either the forward declaration or the function definition, but not both.
+
+void printValues(int x, int y=10);
+ 
+void printValues(int x, int y=10) // error: redefinition of default parameter
+{
+    std::cout << "x: " << x << '\n';
+    std::cout << "y: " << y << '\n';
+}
+
+*********************Rule: If the function has a forward declaration, put the default parameters there. Otherwise, put them on the function definition.
+
+
+****************************************************************************************************************************
+
+Default parameters and function overloading
+
+Functions with default parameters may be overloaded. For example, the following is allowed:
+
+void print(std::string string);
+void print(char ch=' ');
+If the user were to call print(), it would resolve to print(' '), which would print a space.
+
+However, it is important to note that default parameters do NOT count towards the parameters that make the function unique. Consequently, the following is not allowed:
+
+void printValues(int x);
+void printValues(int x, int y=20);
+If the caller were to call printValues(10), the compiler would not be able to disambiguate whether the user wanted printValues(int) or printValues(int, 20) with the default value.

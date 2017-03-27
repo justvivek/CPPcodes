@@ -1,0 +1,66 @@
+The heap segment
+
+The heap segment (also known as the “free store”) keeps track of memory used for dynamic memory allocation. We talked about the heap a bit already in lesson 6.9 -- Dynamic memory allocation with new and delete, so this will be a recap.
+
+In C++, when you use the new operator to allocate memory, this memory is allocated in the application’s heap segment.
+
+int *ptr = new int; // ptr is assigned 4 bytes in the heap
+int *array = new int[10]; // array is assigned 40 bytes in the heap
+The address of this memory is passed back by operator new, and can then be stored in a pointer. You do not have to worry about the mechanics behind the process of how free memory is located and allocated to the user. However, it is worth knowing that sequential memory requests may not result in sequential memory addresses being allocated!
+
+int *ptr1 = new int;
+int *ptr2 = new int;
+// ptr1 and ptr2 may not have sequential addresses
+When a dynamically allocated variable is deleted, the memory is “returned” to the heap and can then be reassigned as future allocation requests are received. Remember that deleting a pointer does not delete the variable, it just returns the memory at the associated address back to the operating system.
+
+The heap has advantages and disadvantages:
+
+Allocating memory on the heap is comparatively slow.
+Allocated memory stays allocated until it is specifically deallocated (beware memory leaks) or the application ends (at which point the OS should clean it up).
+Dynamically allocated memory must be accessed through a pointer. Dereferencing a pointer is slower than accessing a variable directly.
+Because the heap is a big pool of memory, large arrays, structures, or classes can be allocated here.
+
+
+The call stack in action
+
+Let’s examine in more detail how the call stack works. Here is the sequence of steps that takes place when a function is called:
+
+The program encounters a function call.
+A stack frame is constructed and pushed on the stack. The stack frame consists of:
+The address of the instruction beyond the function call (called the return address). This is how the CPU remembers where to return to after the called function exits.
+All function arguments.
+Memory for any local variables.
+Saved copies of any registers modified by the function that need to be restored when the function returns
+The CPU jumps to the function’s start point.
+The instructions inside of the function begin executing.
+When the function terminates, the following steps happen:
+
+Registers are restored from the call stack
+The stack frame is popped off the stack. This frees the memory for all local variables and arguments.
+The return value is handled.
+The CPU resumes execution at the return address.
+Return values can be handled in a number of different ways, depending on the computer’s architecture. Some architectures include the return value as part of the stack frame. Others use CPU registers.
+
+
+The stack has advantages and disadvantages:
+
+Allocating memory on the stack is comparatively fast.
+Memory allocated on the stack stays in scope as long as it is on the stack. It is destroyed when it is popped off the stack.
+All memory allocated on the stack is known at compile time. Consequently, this memory can be accessed directly through a variable.
+Because the stack is relatively small, it is generally not a good idea to do anything that eats up lots of stack space. This includes passing by value or creating local variables of large arrays or other memory-intensive structures.
+
+
+Array subscripts and at() are based on size, not capacity
+
+The range for the subscript operator ([]) and at() function is based on the the vector’s size, not the capacity. Consider the array in the previous example, which has size 3 and capacity 5. What happens if we try to access the array element with index 4? The answer is that it fails, since 4 is greater than the size of the array.
+
+Note that a vector will not resize itself based on a call to the subscript operator or at() function!
+
+Stack behavior with std::vector
+
+If the subscript operator and at() function are based on the array size, and the capacity is always at least as large as the array size, why even worry about the capacity at all? Although std::vector can be used as a dynamic array, it can also be used as a stack. To do this, we can use 3 functions that match our key stack operations:
+
+push_back() pushes an element on the stack.
+back() returns the value of the top element on the stack.
+pop_back() pops an element off the stack.
+

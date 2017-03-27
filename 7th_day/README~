@@ -1,0 +1,51 @@
+Function overloading provides a better solution. Using function overloading, we can simply declare another add() function that takes double parameters:
+
+double add(double x, double y)
+{
+    return x + y;
+}
+We now have two version of add():
+
+int add(int x, int y); // integer version
+double add(double x, double y); // floating point version
+
+Function return types are not considered for uniqueness
+
+You might be tempted to do this:
+
+int getRandomValue();
+double getRandomValue();
+But the compiler will flag this as an error.
+
+Typedefs are not distinct
+
+Since declaring a typedef does not introduce a new type, the following two declarations of Print() are considered identical:
+
+typedef char *string;
+void print(string value);
+void print(char *value);
+
+
+
+When an overloaded function is called, C++ goes through the following process to determine which version of the function will be called:
+
+1) First, C++ tries to find an exact match. This is the case where the actual argument exactly matches the parameter type of one of the overloaded functions. For example:
+
+void print(char *value);
+void print(int value);
+ 
+print(0); // exact match with print(int)
+Although 0 could technically match print(char*) (as a null pointer), it exactly matches print(int). Thus print(int) is the best match available.
+
+2) If no exact match is found, C++ tries to find a match through promotion. In lesson 4.4 -- type conversion and casting, we covered how certain types can be automatically promoted via internal type conversion to other types. To summarize,
+
+Char, unsigned char, and short is promoted to an int.
+Unsigned short can be promoted to int or unsigned int, depending on the size of an int
+Float is promoted to double
+Enum is promoted to int
+
+For example:
+
+void print(char *value);
+void print(int value); 
+print('a'); // promoted to match print(int)

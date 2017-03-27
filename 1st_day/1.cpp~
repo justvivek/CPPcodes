@@ -1,0 +1,12 @@
+//day 1st of C++ programming
+
+#include<iostream>
+using namespace std;
+
+int main(){
+	int x;
+	cout<<"enter the variable"<<endl;
+	cin>> x;
+	cout<<"Value of the variable is: "<< x <<endl;
+	return 0;
+}

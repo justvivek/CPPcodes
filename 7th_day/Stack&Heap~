@@ -1,0 +1,21 @@
+The heap segment
+
+The heap segment (also known as the “free store”) keeps track of memory used for dynamic memory allocation. We talked about the heap a bit already in lesson 6.9 -- Dynamic memory allocation with new and delete, so this will be a recap.
+
+In C++, when you use the new operator to allocate memory, this memory is allocated in the application’s heap segment.
+
+int *ptr = new int; // ptr is assigned 4 bytes in the heap
+int *array = new int[10]; // array is assigned 40 bytes in the heap
+The address of this memory is passed back by operator new, and can then be stored in a pointer. You do not have to worry about the mechanics behind the process of how free memory is located and allocated to the user. However, it is worth knowing that sequential memory requests may not result in sequential memory addresses being allocated!
+
+int *ptr1 = new int;
+int *ptr2 = new int;
+// ptr1 and ptr2 may not have sequential addresses
+When a dynamically allocated variable is deleted, the memory is “returned” to the heap and can then be reassigned as future allocation requests are received. Remember that deleting a pointer does not delete the variable, it just returns the memory at the associated address back to the operating system.
+
+The heap has advantages and disadvantages:
+
+Allocating memory on the heap is comparatively slow.
+Allocated memory stays allocated until it is specifically deallocated (beware memory leaks) or the application ends (at which point the OS should clean it up).
+Dynamically allocated memory must be accessed through a pointer. Dereferencing a pointer is slower than accessing a variable directly.
+Because the heap is a big pool of memory, large arrays, structures, or classes can be allocated here.
